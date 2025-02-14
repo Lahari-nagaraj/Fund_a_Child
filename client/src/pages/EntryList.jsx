@@ -7,12 +7,18 @@ const EntryList = () => {
   const [entries, setEntries] = useState([]);
   const navigate = useNavigate();
 
+  // Get backend URL from environment variables
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
   const fetchEntries = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/entries");
+      const response = await axios.get(`${BACKEND_URL}/entries`, {
+        withCredentials: true,
+      });
       setEntries(response.data);
     } catch (error) {
       console.error("Fetching error:", error);
+      alert("Failed to fetch entries. Check the console for details.");
     }
   };
 
@@ -21,8 +27,18 @@ const EntryList = () => {
   }, []);
 
   const deleteEntry = async (id) => {
-    await axios.delete(`http://localhost:5000/delete-entry/${id}`);
-    fetchEntries();
+    if (!window.confirm("Are you sure you want to delete this entry?")) return;
+
+    try {
+      await axios.delete(`${BACKEND_URL}/delete-entry/${id}`, {
+        withCredentials: true,
+      });
+      alert("Entry deleted successfully!");
+      fetchEntries(); // Refresh list
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert("Failed to delete entry.");
+    }
   };
 
   return (

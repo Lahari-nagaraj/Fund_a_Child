@@ -8,20 +8,26 @@ const Form = () => {
   const [size, setSize] = useState("M");
   const navigate = useNavigate();
 
+  // Backend API URL from .env file
+  const API_URL = import.meta.env.VITE_BACKEND_URL;
+
   const handleSubmit = async () => {
     if (!name) return alert("Name is required!");
 
     try {
-      await axios.post("http://localhost:5000/add-entry", {
-        name,
-        batch,
-        size,
-      });
+      console.log("Submitting data to:", `${API_URL}/add-entry`);
+      await axios.post(
+        `${API_URL}/add-entry`,
+        { name, batch, size },
+        { withCredentials: true } // Fix CORS issue
+      );
+
       setName(""); // Reset form after submission
+      alert("Entry submitted successfully!");
       navigate("/entries"); // Navigate to Entry List page
     } catch (error) {
       console.error("Submission error:", error);
-      alert("Failed to submit data");
+      alert("Failed to submit data. Check the console for more details.");
     }
   };
 
