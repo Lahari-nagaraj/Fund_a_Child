@@ -58,6 +58,6 @@ app.delete("/delete-entry/:id", async (req, res) => {
 });
 
 // Start Server
-app.listen(port, () => {
+app.listen(process.env.PORT, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
