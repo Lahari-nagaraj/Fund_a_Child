@@ -12,7 +12,8 @@ app.use(express.json()); // Built-in body parser
 // Allow CORS for your frontend (Vercel & local development)
 const allowedOrigins = [
   "http://localhost:5173", // Local React app
-  "https://fund-a-child-bl1gzo780-lahari-priya-ns-projects.vercel.app" // Deployed frontend
+  "http://localhost:5174", // Sometimes Vite runs on a different port
+  "https://fund-a-child.vercel.app" // Deployed frontend (update if different)
 ];
 
 app.use(
@@ -32,21 +33,25 @@ app.use(
 
 // Manually set headers for preflight requests
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", allowedOrigins.includes(req.headers.origin) ? req.headers.origin : "*");
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
   res.header("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.header("Access-Control-Allow-Credentials", "true");
+
   if (req.method === "OPTIONS") return res.sendStatus(200);
   next();
 });
 
-// Database Connection
+// Database Connection (Use environment variables)
 const pool = new Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "FCI",
-  password: "hari@2013",
-  port: 5432,
+  user: process.env.DB_USER || "postgres",
+  host: process.env.DB_HOST || "localhost",
+  database: process.env.DB_NAME || "FCI",
+  password: process.env.DB_PASSWORD || "hari@2013",
+  port: process.env.DB_PORT || 5432,
 });
 
 // Add an entry
