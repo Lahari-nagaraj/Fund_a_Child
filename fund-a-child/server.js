@@ -13,10 +13,11 @@ app.use(bodyParser.json());
 
 // Database Connection
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  user: "postgres",
+  host: "localhost",
+  database: "FCI",
+  password: "hari@2013",
+  port: 5432,
 });
 
 // Add an entry
@@ -58,6 +59,6 @@ app.delete("/delete-entry/:id", async (req, res) => {
 });
 
 // Start Server
-app.listen(process.env.PORT, () => {
+app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
