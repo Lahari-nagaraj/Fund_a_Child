@@ -13,11 +13,10 @@ app.use(bodyParser.json());
 
 // Database Connection
 const pool = new Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "FCI",
-  password: "hari@2013",
-  port: 5432,
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 // Add an entry
